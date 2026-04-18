@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- FILE: profile.html — User Profile Page -->
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>HelpHub AI – Profile</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+  <!-- ===================== NAVBAR ===================== -->
+  <nav class="hh-navbar">
+    <div class="container">
+      <div class="d-flex align-items-center justify-content-between">
+        <a href="index.html" class="navbar-brand">
+          <span class="hh-logo-icon">H</span>
+          HelpHub AI
+        </a>
+        <div class="d-none d-md-flex align-items-center gap-1">
+          <a href="dashboard.html"  class="nav-link">Dashboard</a>
+          <a href="onboarding.html" class="nav-link">Onboarding</a>
+          <a href="profile.html"    class="nav-link">Profile</a>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ===================== MAIN CONTENT ===================== -->
+  <div class="container page-wrap">
+
+    <!-- Hero: User name + role -->
+    <div class="hh-hero">
+      <p class="breadcrumb-label">PROFILE</p>
+      <h1 id="profile-name">Ayesha Khan</h1>
+      <p id="profile-meta" style="color:rgba(255,255,255,0.55);font-size:0.85rem;margin:0;">
+        Both &bull; Karachi
+      </p>
+    </div>
+
+    <div class="row g-4">
+
+      <!-- Left: Public profile (Skills & Reputation) -->
+      <div class="col-lg-6">
+        <div class="hh-card">
+          <p class="hh-card-title">PUBLIC PROFILE</p>
+          <h2>Skills and reputation</h2>
+
+          <div class="profile-row">
+            <span>Trust score</span>
+            <span id="pub-trust" class="text-accent">100%</span>
+          </div>
+          <div class="profile-row">
+            <span>Contributions</span>
+            <span id="pub-contrib">35</span>
+          </div>
+
+          <div class="mt-2 mb-1">
+            <p style="font-size:0.82rem;font-weight:700;color:var(--text-muted);margin-bottom:6px;">Skills</p>
+            <div id="pub-skills"></div>
+          </div>
+
+          <div class="mt-2">
+            <p style="font-size:0.82rem;font-weight:700;color:var(--text-muted);margin-bottom:6px;">Badges</p>
+            <div id="pub-badges"></div>
+          </div>
+
+          <!-- Trust bar -->
+          <div class="mt-3">
+            <div class="trust-bar-bg">
+              <div class="trust-bar-fill" id="trust-bar" style="width:100%;"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right: Edit profile form -->
+      <div class="col-lg-6">
+        <div class="hh-card">
+          <p class="hh-card-title">EDIT PROFILE</p>
+          <h2>Update your identity</h2>
+
+          <div class="row g-3 mb-3">
+            <div class="col-6">
+              <label class="hh-label">Name</label>
+              <input type="text" class="hh-form-control" id="edit-name" placeholder="Your name" />
+            </div>
+            <div class="col-6">
+              <label class="hh-label">Location</label>
+              <input type="text" class="hh-form-control" id="edit-location" placeholder="City" />
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <label class="hh-label">Skills (comma-separated)</label>
+            <input type="text" class="hh-form-control" id="edit-skills"
+                   placeholder="Figma, UI/UX, HTML/CSS" />
+          </div>
+
+          <div class="mb-4">
+            <label class="hh-label">Interests (comma-separated)</label>
+            <input type="text" class="hh-form-control" id="edit-interests"
+                   placeholder="Hackathons, UI/UX, Community Building" />
+          </div>
+
+          <button class="btn-teal btn-teal-wide" onclick="saveProfile()">Save profile</button>
+
+          <p id="save-msg" class="d-none text-center mt-2" style="font-size:0.82rem;color:var(--accent);font-weight:600;">
+            ✅ Profile saved!
+          </p>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Logout / Switch user -->
+    <div class="text-center mt-4">
+      <button class="btn-outline-dark-custom" onclick="logOut()">Log out / Switch user</button>
+    </div>
+
+  </div><!-- /container -->
+
+  <!-- Scripts -->
+  <script src="js/data.js"></script>
+  <script src="js/app.js"></script>
+  <script>
+    // ── Load user data into the page ────────────────────────
+    window.addEventListener("DOMContentLoaded", function () {
+      // Use logged-in user or fallback to Ayesha Khan
+      const user = getLoggedInUser() || DEFAULT_USERS[0];
+      populatePage(user);
+    });
+
+    function populatePage(user) {
+      // Hero
+      document.getElementById("profile-name").textContent  = user.name;
+      document.getElementById("profile-meta").textContent  =
+        (user.role || "Both") + " • " + (user.location || "–");
+
+      // Public stats
+      document.getElementById("pub-trust").textContent  = (user.trustScore || 0) + "%";
+      document.getElementById("pub-contrib").textContent = user.contributions || 0;
+
+      // Trust bar width
+      document.getElementById("trust-bar").style.width = (user.trustScore || 0) + "%";
+
+      // Skills chips
+      const skills = user.skills || [];
+      document.getElementById("pub-skills").innerHTML =
+        skills.map(s => `<span class="skill-chip">${s}</span>`).join("") || "–";
+
+      // Badges chips
+      const badges = user.badges || [];
+      document.getElementById("pub-badges").innerHTML =
+        badges.map(b => `<span class="skill-chip">${b}</span>`).join("") || "–";
+
+      // Edit form pre-fill
+      document.getElementById("edit-name").value      = user.name || "";
+      document.getElementById("edit-location").value  = user.location || "";
+      document.getElementById("edit-skills").value    = skills.join(", ");
+      document.getElementById("edit-interests").value = (user.interests || []).join(", ");
+    }
+
+    // ── Save profile edits to LocalStorage ──────────────────
+    function saveProfile() {
+      const user = getLoggedInUser() || DEFAULT_USERS[0];
+
+      user.name      = document.getElementById("edit-name").value.trim() || user.name;
+      user.location  = document.getElementById("edit-location").value.trim();
+      user.skills    = document.getElementById("edit-skills").value.split(",").map(s=>s.trim()).filter(Boolean);
+      user.interests = document.getElementById("edit-interests").value.split(",").map(s=>s.trim()).filter(Boolean);
+
+      saveLoggedInUser(user);
+      populatePage(user); // refresh public panel
+
+      const msg = document.getElementById("save-msg");
+      msg.classList.remove("d-none");
+      setTimeout(() => msg.classList.add("d-none"), 3000);
+    }
+
+    // ── Log out ─────────────────────────────────────────────
+    function logOut() {
+      localStorage.removeItem("hh_user");
+      window.location.href = "auth.html";
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- FILE: explore.html — Explore / Feed Page -->
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>HelpHub AI – Explore</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+  <!-- ===================== NAVBAR ===================== -->
+  <nav class="hh-navbar">
+    <div class="container">
+      <div class="d-flex align-items-center justify-content-between">
+        <a href="index.html" class="navbar-brand">
+          <span class="hh-logo-icon">H</span>
+          HelpHub AI
+        </a>
+        <div class="d-none d-md-flex align-items-center gap-1">
+          <a href="dashboard.html"     class="nav-link">Dashboard</a>
+          <a href="explore.html"       class="nav-link">Explore</a>
+          <a href="leaderboard.html"   class="nav-link">Leaderboard</a>
+          <a href="notifications.html" class="nav-link">Notifications</a>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ===================== MAIN CONTENT ===================== -->
+  <div class="container page-wrap">
+
+    <!-- Hero -->
+    <div class="hh-hero">
+      <p class="breadcrumb-label">EXPLORE / FEED</p>
+      <h1>Browse help requests with filterable community context.</h1>
+      <p>Filter by category, urgency, skills, and location to surface the best matches.</p>
+    </div>
+
+    <div class="row g-4">
+
+      <!-- Left: Filters sidebar -->
+      <div class="col-lg-4 col-md-5">
+        <div class="hh-card">
+          <p class="section-label">FILTERS</p>
+          <h2>Refine the feed</h2>
+
+          <!-- Category filter -->
+          <div class="mb-3">
+            <label class="hh-label">Category</label>
+            <select class="hh-form-control" id="filter-category" onchange="applyFilters()">
+              <option value="">All categories</option>
+              <option value="Web Development">Web Development</option>
+              <option value="Design">Design</option>
+              <option value="Career">Career</option>
+              <option value="Community">Community</option>
+            </select>
+          </div>
+
+          <!-- Urgency filter -->
+          <div class="mb-3">
+            <label class="hh-label">Urgency</label>
+            <select class="hh-form-control" id="filter-urgency" onchange="applyFilters()">
+              <option value="">All urgency levels</option>
+              <option value="High">High</option>
+              <option value="Medium">Medium</option>
+              <option value="Low">Low</option>
+            </select>
+          </div>
+
+          <!-- Skills filter (text search) -->
+          <div class="mb-3">
+            <label class="hh-label">Skills</label>
+            <input type="text" class="hh-form-control" id="filter-skills"
+                   placeholder="React, Figma, Git/GitHub"
+                   oninput="applyFilters()" />
+          </div>
+
+          <!-- Location filter -->
+          <div class="mb-3">
+            <label class="hh-label">Location</label>
+            <input type="text" class="hh-form-control" id="filter-location"
+                   placeholder="Karachi, Lahore, Remote"
+                   oninput="applyFilters()" />
+          </div>
+
+          <!-- Status filter -->
+          <div class="mb-3">
+            <label class="hh-label">Status</label>
+            <select class="hh-form-control" id="filter-status" onchange="applyFilters()">
+              <option value="">All statuses</option>
+              <option value="Open">Open</option>
+              <option value="Solved">Solved</option>
+            </select>
+          </div>
+
+          <!-- Reset filters -->
+          <button class="btn-sm-outline w-100 mt-2" onclick="resetFilters()">Reset filters</button>
+        </div>
+      </div>
+
+      <!-- Right: Request feed -->
+      <div class="col-lg-8 col-md-7">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+          <p class="text-muted-sm mb-0">Showing <strong id="result-count">0</strong> requests</p>
+          <a href="create-request.html" class="btn-teal" style="padding:8px 18px;font-size:0.85rem;">
+            + Post a request
+          </a>
+        </div>
+
+        <!-- Feed list -->
+        <div id="feed-list">
+          <!-- Filled by JS -->
+        </div>
+
+        <!-- Empty state -->
+        <div id="empty-state" class="d-none text-center py-5">
+          <p style="font-size:2rem;">🔍</p>
+          <p class="text-muted-sm">No requests match your filters. Try adjusting them.</p>
+        </div>
+      </div>
+
+    </div>
+  </div><!-- /container -->
+
+  <!-- Scripts -->
+  <script src="js/data.js"></script>
+  <script src="js/app.js"></script>
+  <script>
+    // ── Render the requests feed with optional filtering ────
+    function applyFilters() {
+      const catFilter  = document.getElementById("filter-category").value;
+      const urgFilter  = document.getElementById("filter-urgency").value;
+      const skillText  = document.getElementById("filter-skills").value.toLowerCase();
+      const locText    = document.getElementById("filter-location").value.toLowerCase();
+      const statFilter = document.getElementById("filter-status").value;
+
+      let requests = getRequests();
+
+      // Apply each filter if set
+      if (catFilter)  requests = requests.filter(r => r.category === catFilter);
+      if (urgFilter)  requests = requests.filter(r => r.urgency  === urgFilter);
+      if (statFilter) requests = requests.filter(r => r.status   === statFilter);
+
+      if (skillText) {
+        requests = requests.filter(r =>
+          r.tags.some(t => t.toLowerCase().includes(skillText)) ||
+          r.title.toLowerCase().includes(skillText) ||
+          r.description.toLowerCase().includes(skillText)
+        );
+      }
+
+      if (locText) {
+        requests = requests.filter(r =>
+          r.location.toLowerCase().includes(locText)
+        );
+      }
+
+      renderFeed(requests);
+    }
+
+    function renderFeed(requests) {
+      const list  = document.getElementById("feed-list");
+      const empty = document.getElementById("empty-state");
+      const count = document.getElementById("result-count");
+
+      list.innerHTML = "";
+      count.textContent = requests.length;
+
+      if (requests.length === 0) {
+        empty.classList.remove("d-none");
+        return;
+      }
+
+      empty.classList.add("d-none");
+      requests.forEach(req => {
+        const div = document.createElement("div");
+        div.innerHTML = buildRequestCard(req);
+        list.appendChild(div);
+      });
+    }
+
+    function resetFilters() {
+      document.getElementById("filter-category").value = "";
+      document.getElementById("filter-urgency").value  = "";
+      document.getElementById("filter-skills").value   = "";
+      document.getElementById("filter-location").value = "";
+      document.getElementById("filter-status").value   = "";
+      applyFilters();
+    }
+
+    // ── On page load, render all requests ──────────────────
+    window.addEventListener("DOMContentLoaded", function () {
+      applyFilters();
+    });
+  </script>
+</body>
+</html>

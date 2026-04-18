@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- FILE: request-detail.html — Request Detail Page -->
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>HelpHub AI – Request Detail</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+  <!-- ===================== NAVBAR ===================== -->
+  <nav class="hh-navbar">
+    <div class="container">
+      <div class="d-flex align-items-center justify-content-between">
+        <a href="index.html" class="navbar-brand">
+          <span class="hh-logo-icon">H</span>
+          HelpHub AI
+        </a>
+        <div class="d-none d-md-flex align-items-center gap-1">
+          <a href="dashboard.html" class="nav-link">Dashboard</a>
+          <a href="explore.html"   class="nav-link">Explore</a>
+          <a href="messages.html"  class="nav-link">Messages</a>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ===================== MAIN CONTENT ===================== -->
+  <div class="container page-wrap">
+
+    <!-- Hero: Request title & badges -->
+    <div class="hh-hero mb-4" id="detail-hero">
+      <p class="breadcrumb-label">REQUEST DETAIL</p>
+      <div id="detail-badges" class="mb-2"></div>
+      <h1 id="detail-title">Loading...</h1>
+      <p id="detail-desc">–</p>
+    </div>
+
+    <div class="row g-4">
+
+      <!-- Left: AI Summary + Actions -->
+      <div class="col-lg-7">
+
+        <!-- AI Summary card -->
+        <div class="hh-card mb-3">
+          <div class="d-flex align-items-center gap-2 mb-3">
+            <span class="hh-logo-icon" style="width:30px;height:30px;font-size:0.8rem;">H</span>
+            <span style="font-weight:700;font-size:0.9rem;">HelpHub AI</span>
+          </div>
+          <p class="hh-card-title">AI SUMMARY</p>
+          <p id="ai-summary-text" style="font-size:0.9rem;color:var(--text-secondary);line-height:1.6;">
+            –
+          </p>
+          <div id="summary-tags" class="mt-2"></div>
+        </div>
+
+        <!-- Actions card -->
+        <div class="hh-card">
+          <p class="hh-card-title">ACTIONS</p>
+          <div class="d-flex gap-3 flex-wrap align-items-center">
+            <button class="btn-teal" onclick="markCanHelp()">I can help</button>
+            <button class="btn-outline-dark-custom" onclick="markSolved()">Mark as solved</button>
+          </div>
+          <p id="action-msg" class="d-none text-muted-sm mt-2" style="font-size:0.82rem;"></p>
+        </div>
+
+      </div>
+
+      <!-- Right: Requester + Helpers -->
+      <div class="col-lg-5">
+
+        <!-- Requester card -->
+        <div class="hh-card mb-3">
+          <p class="hh-card-title">REQUESTER</p>
+          <div class="d-flex align-items-center gap-2">
+            <div class="helper-avatar avatar-teal" id="req-avatar">AK</div>
+            <div>
+              <div style="font-weight:700;font-size:0.9rem;" id="req-name">–</div>
+              <div class="text-muted-sm" id="req-location">–</div>
+            </div>
+          </div>
+          <!-- Quick nav links below requester -->
+          <div class="d-flex gap-3 mt-3 pt-2" style="border-top:1px solid #f0f0ec;font-size:0.82rem;">
+            <a href="dashboard.html" style="color:var(--text-muted);text-decoration:none;">Dashboard</a>
+            <a href="explore.html"   style="color:var(--text-muted);text-decoration:none;">Explore</a>
+            <a href="messages.html"  style="color:var(--text-muted);text-decoration:none;">Messages</a>
+          </div>
+        </div>
+
+        <!-- Helpers card -->
+        <div class="hh-card">
+          <p class="hh-card-title">HELPERS</p>
+          <h3 style="font-size:1rem;margin-bottom:1rem;">People ready to support</h3>
+
+          <div id="helpers-list">
+            <!-- Filled by JS -->
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </div><!-- /container -->
+
+  <!-- Scripts -->
+  <script src="js/data.js"></script>
+  <script src="js/app.js"></script>
+  <script>
+    // ── Avatar colours cycle ────────────────────────────────
+    const avatarColors = ["avatar-orange","avatar-teal","avatar-dark","avatar-blue","avatar-red"];
+
+    function getInitials(name) {
+      return name.split(" ").map(w => w[0]).join("").toUpperCase().slice(0,2);
+    }
+
+    // ── Load request from URL param ?id=r2 ──────────────────
+    window.addEventListener("DOMContentLoaded", function () {
+      const params = new URLSearchParams(window.location.search);
+      const reqId  = params.get("id") || "r4"; // fallback to r4
+
+      const requests = getRequests();
+      const req = requests.find(r => r.id === reqId) || requests[0];
+
+      if (!req) return;
+
+      // Hero badges + title
+      document.getElementById("detail-badges").innerHTML = buildBadges(req);
+      document.getElementById("detail-title").textContent = req.title;
+      document.getElementById("detail-desc").textContent  = req.description;
+
+      // AI Summary
+      const summary = req.aiSummary ||
+        `This is a ${req.category} request with ${req.urgency.toLowerCase()} urgency. ` +
+        `Best suited for members with relevant expertise in ${req.tags.join(", ") || req.category}.`;
+      document.getElementById("ai-summary-text").textContent = summary;
+      document.getElementById("summary-tags").innerHTML = buildChips(req.tags);
+
+      // Requester info
+      document.getElementById("req-name").textContent     = req.author;
+      document.getElementById("req-location").textContent = req.location;
+      document.getElementById("req-avatar").textContent   = getInitials(req.author);
+
+      // Helpers list
+      const helpersList = document.getElementById("helpers-list");
+      if (req.helpersList && req.helpersList.length) {
+        req.helpersList.forEach((helperName, i) => {
+          // Find helper's skills from our default users
+          const helperUser = DEFAULT_USERS.find(u => u.name === helperName);
+          const skills = helperUser ? helperUser.skills.slice(0,3).join(", ") : "Skills not listed";
+          const trust  = helperUser ? helperUser.trustScore + "%" : "–";
+
+          const div = document.createElement("div");
+          div.className = "helper-item";
+          div.innerHTML = `
+            <div class="helper-avatar ${avatarColors[i % avatarColors.length]}">${getInitials(helperName)}</div>
+            <div class="helper-info flex-grow-1">
+              <h6>${helperName}</h6>
+              <p>${skills}</p>
+            </div>
+            <span class="trust-badge">Trust ${trust}</span>
+          `;
+          helpersList.appendChild(div);
+        });
+      } else {
+        helpersList.innerHTML = `<p class="text-muted-sm">No helpers yet. Be the first!</p>`;
+      }
+    });
+
+    // ── Actions ─────────────────────────────────────────────
+    function markCanHelp() {
+      const msg = document.getElementById("action-msg");
+      msg.textContent = "✅ You have offered to help! The requester will be notified.";
+      msg.classList.remove("d-none");
+    }
+
+    function markSolved() {
+      const params  = new URLSearchParams(window.location.search);
+      const reqId   = params.get("id") || "r4";
+      const reqs    = getRequests();
+      const req     = reqs.find(r => r.id === reqId);
+      if (req) {
+        req.status = "Solved";
+        saveRequests(reqs);
+        // Update badge on screen
+        document.getElementById("detail-badges").innerHTML = buildBadges(req);
+        const msg = document.getElementById("action-msg");
+        msg.textContent = "🎉 Request marked as solved! Trust score updated.";
+        msg.classList.remove("d-none");
+      }
+    }
+  </script>
+</body>
+</html>

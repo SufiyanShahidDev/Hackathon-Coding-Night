@@ -1,0 +1,915 @@
+/* =========================================================
+   FILE: css/style.css
+   PURPOSE: Global styles for the entire HelpHub AI platform.
+   Include this file in ALL HTML pages inside <head>.
+   ========================================================= */
+
+/* --- Google Fonts Import --- */
+@import url('https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700;800;900&display=swap');
+
+/* --- CSS Variables (Design Tokens) --- */
+:root {
+  --accent:        #0d9e8d;
+  --accent-dark:   #0a7d6f;
+  --dark-hero:     #1a2e2a;
+  --text-primary:  #0f1e1c;
+  --text-secondary:#374151;
+  --text-muted:    #6b7280;
+  --white:         #ffffff;
+  --card-border:   #e8e8e4;
+  --body-bg:       #f5f0e8;
+  --card-shadow:   0 2px 16px rgba(0, 0, 0, 0.06);
+  --card-hover:    0 8px 32px rgba(0, 0, 0, 0.10);
+  --radius-card:   18px;
+  --radius-sm:     10px;
+  --radius-pill:   50px;
+}
+
+/* --- Reset & Base --- */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Figtree', sans-serif;
+  color: var(--text-primary);
+  min-height: 100vh;
+
+  /* Mesh gradient background matching the screenshots */
+  background-color: var(--body-bg);
+  background-image:
+    radial-gradient(ellipse at 0% 0%,   rgba(168, 220, 205, 0.55) 0%, transparent 45%),
+    radial-gradient(ellipse at 100% 5%,  rgba(252, 215, 185, 0.45) 0%, transparent 45%),
+    radial-gradient(ellipse at 50% 100%, rgba(195, 228, 215, 0.40) 0%, transparent 55%);
+}
+
+/* =========================================================
+   NAVBAR
+   ========================================================= */
+.hh-navbar {
+  background: transparent;
+  padding: 18px 0;
+  position: sticky;
+  top: 0;
+  z-index: 999;
+  backdrop-filter: blur(6px);
+}
+
+.hh-navbar .navbar-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 700;
+  font-size: 1rem;
+  color: var(--text-primary);
+  text-decoration: none;
+}
+
+.hh-logo-icon {
+  width: 34px;
+  height: 34px;
+  background: var(--accent);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-weight: 800;
+  font-size: 1rem;
+  flex-shrink: 0;
+}
+
+.hh-navbar .nav-link {
+  color: var(--text-secondary) !important;
+  font-size: 0.92rem;
+  font-weight: 500;
+  padding: 6px 14px !important;
+  border-radius: var(--radius-pill);
+  transition: all 0.2s;
+  text-decoration: none;
+}
+
+.hh-navbar .nav-link:hover {
+  color: var(--text-primary) !important;
+  background: rgba(0,0,0,0.05);
+}
+
+.hh-navbar .nav-link.active {
+  background: transparent;
+  border: 1.5px solid rgba(0, 0, 0, 0.18);
+  color: var(--text-primary) !important;
+}
+
+/* =========================================================
+   HERO BANNER (Dark card used at top of most pages)
+   ========================================================= */
+.hh-hero {
+  background: var(--dark-hero);
+  border-radius: var(--radius-card);
+  padding: 2.2rem 2.5rem;
+  color: white;
+  margin-bottom: 1.75rem;
+}
+
+.hh-hero .breadcrumb-label {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.5);
+  margin-bottom: 0.6rem;
+}
+
+.hh-hero h1 {
+  font-size: clamp(1.6rem, 3.5vw, 2.5rem);
+  font-weight: 800;
+  line-height: 1.15;
+  margin-bottom: 0.6rem;
+  color: white;
+}
+
+.hh-hero p {
+  font-size: 0.9rem;
+  color: rgba(255,255,255,0.65);
+  max-width: 520px;
+  line-height: 1.6;
+  margin: 0;
+}
+
+/* =========================================================
+   CARDS
+   ========================================================= */
+.hh-card {
+  background: var(--white);
+  border-radius: var(--radius-card);
+  padding: 1.6rem;
+  box-shadow: var(--card-shadow);
+  border: 1px solid rgba(0,0,0,0.04);
+}
+
+.hh-card-title {
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 0.8rem;
+}
+
+.hh-card h2 {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: var(--text-primary);
+  margin-bottom: 1rem;
+}
+
+.hh-card h3 {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 0.3rem;
+}
+
+/* =========================================================
+   REQUEST CARDS (in Explore feed)
+   ========================================================= */
+.request-card {
+  background: var(--white);
+  border-radius: var(--radius-card);
+  padding: 1.4rem 1.6rem;
+  box-shadow: var(--card-shadow);
+  border: 1px solid rgba(0,0,0,0.04);
+  margin-bottom: 1rem;
+  transition: box-shadow 0.2s, transform 0.2s;
+}
+
+.request-card:hover {
+  box-shadow: var(--card-hover);
+  transform: translateY(-2px);
+}
+
+.request-card h5 {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0.5rem 0 0.4rem;
+}
+
+.request-card p {
+  font-size: 0.875rem;
+  color: var(--text-muted);
+  margin-bottom: 0.6rem;
+  line-height: 1.5;
+}
+
+.request-card .requester-name {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 0.15rem;
+}
+
+.request-card .requester-meta {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
+
+.request-card .open-details {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  text-decoration: none;
+  white-space: nowrap;
+  transition: color 0.2s;
+}
+
+.request-card .open-details:hover {
+  color: var(--accent);
+}
+
+/* =========================================================
+   BADGES / PILLS
+   ========================================================= */
+.badge-pill {
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: var(--radius-pill);
+  font-size: 0.75rem;
+  font-weight: 600;
+  border: 1.5px solid;
+  margin-right: 4px;
+  margin-bottom: 4px;
+}
+
+/* Category badges */
+.badge-webdev   { background: rgba(13,158,141,0.1); color: #0d9e8d; border-color: rgba(13,158,141,0.35); }
+.badge-design   { background: rgba(139,92,246,0.1); color: #7c3aed; border-color: rgba(139,92,246,0.3); }
+.badge-career   { background: rgba(59,130,246,0.1); color: #2563eb; border-color: rgba(59,130,246,0.3); }
+.badge-community{ background: rgba(234,179,8,0.1);  color: #b45309; border-color: rgba(234,179,8,0.35); }
+
+/* Urgency badges */
+.badge-high   { background: rgba(239,68,68,0.1);  color: #dc2626; border-color: rgba(239,68,68,0.3); }
+.badge-medium { background: rgba(249,115,22,0.1); color: #c2410c; border-color: rgba(249,115,22,0.3); }
+.badge-low    { background: rgba(234,179,8,0.1);  color: #b45309; border-color: rgba(234,179,8,0.3); }
+
+/* Status badges */
+.badge-solved { background: rgba(34,197,94,0.1);  color: #15803d; border-color: rgba(34,197,94,0.3); }
+.badge-open   { background: rgba(59,130,246,0.1); color: #2563eb; border-color: rgba(59,130,246,0.3); }
+
+/* Skill/tag chips (used inside cards as tags) */
+.skill-chip {
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: var(--radius-pill);
+  font-size: 0.75rem;
+  font-weight: 500;
+  background: #f3f4f6;
+  color: var(--text-secondary);
+  border: 1px solid var(--card-border);
+  margin-right: 4px;
+  margin-bottom: 4px;
+}
+
+/* Trust badge */
+.trust-badge {
+  background: #f3f4f6;
+  color: var(--text-secondary);
+  font-size: 0.78rem;
+  font-weight: 700;
+  padding: 4px 12px;
+  border-radius: var(--radius-pill);
+}
+
+/* =========================================================
+   BUTTONS
+   ========================================================= */
+.btn-teal {
+  background: var(--accent);
+  color: white !important;
+  border: none;
+  border-radius: var(--radius-pill);
+  padding: 10px 24px;
+  font-size: 0.9rem;
+  font-weight: 700;
+  font-family: 'Figtree', sans-serif;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.15s;
+  text-decoration: none;
+  display: inline-block;
+}
+
+.btn-teal:hover {
+  background: var(--accent-dark);
+  transform: translateY(-1px);
+  color: white !important;
+}
+
+.btn-outline-dark-custom {
+  background: transparent;
+  color: var(--text-primary) !important;
+  border: 1.5px solid rgba(0,0,0,0.2);
+  border-radius: var(--radius-pill);
+  padding: 10px 24px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  font-family: 'Figtree', sans-serif;
+  cursor: pointer;
+  transition: all 0.2s;
+  text-decoration: none;
+  display: inline-block;
+}
+
+.btn-outline-dark-custom:hover {
+  background: rgba(0,0,0,0.05);
+  color: var(--text-primary) !important;
+}
+
+/* Wide button (full-width for forms) */
+.btn-teal-wide {
+  width: 100%;
+  display: block;
+  text-align: center;
+}
+
+/* =========================================================
+   FORM ELEMENTS
+   ========================================================= */
+.hh-form-control {
+  border: 1.5px solid #e0deda;
+  border-radius: var(--radius-sm);
+  padding: 10px 14px;
+  font-size: 0.9rem;
+  font-family: 'Figtree', sans-serif;
+  color: var(--text-primary);
+  background: white;
+  width: 100%;
+  transition: border-color 0.2s;
+  outline: none;
+}
+
+.hh-form-control:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(13,158,141,0.1);
+}
+
+.hh-label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  margin-bottom: 6px;
+  display: block;
+}
+
+/* =========================================================
+   STATS CARDS (Dashboard / Landing)
+   ========================================================= */
+.stat-card {
+  background: white;
+  border-radius: var(--radius-card);
+  padding: 1.4rem 1.6rem;
+  box-shadow: var(--card-shadow);
+}
+
+.stat-card .stat-label {
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: 0.4rem;
+}
+
+.stat-card .stat-number {
+  font-size: 2rem;
+  font-weight: 900;
+  color: var(--text-primary);
+  line-height: 1;
+  margin-bottom: 0.4rem;
+}
+
+.stat-card .stat-desc {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  line-height: 1.4;
+}
+
+/* =========================================================
+   HELPERS LIST (Request Detail)
+   ========================================================= */
+.helper-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 0.9rem 0;
+  border-bottom: 1px solid #f0f0ec;
+}
+
+.helper-item:last-child { border-bottom: none; }
+
+.helper-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.8rem;
+  font-weight: 800;
+  color: white;
+  flex-shrink: 0;
+}
+
+.avatar-orange { background: #f97316; }
+.avatar-red    { background: #ef4444; }
+.avatar-teal   { background: var(--accent); }
+.avatar-blue   { background: #3b82f6; }
+.avatar-dark   { background: #374151; }
+
+.helper-info h6 {
+  font-size: 0.9rem;
+  font-weight: 700;
+  margin: 0 0 2px;
+}
+
+.helper-info p {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  margin: 0;
+}
+
+/* =========================================================
+   LEADERBOARD RANKING ITEMS
+   ========================================================= */
+.rank-item {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 1rem 0;
+  border-bottom: 1px solid #f0f0ec;
+}
+
+.rank-item:last-child { border-bottom: none; }
+
+.rank-number {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--text-muted);
+  min-width: 20px;
+}
+
+.rank-info h6 {
+  font-size: 0.9rem;
+  font-weight: 700;
+  margin: 0 0 2px;
+}
+
+.rank-info p {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  margin: 0;
+}
+
+.rank-score {
+  margin-left: auto;
+  text-align: right;
+}
+
+.rank-score .score-pct {
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+
+.rank-score .score-contributions {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+/* Trust bar */
+.trust-bar-wrap { margin-top: 4px; }
+.trust-bar-bg {
+  height: 6px;
+  background: #e5e7eb;
+  border-radius: 99px;
+  overflow: hidden;
+}
+.trust-bar-fill {
+  height: 100%;
+  border-radius: 99px;
+  background: linear-gradient(90deg, #f59e0b, #16a34a, #0d9e8d);
+}
+
+/* =========================================================
+   NOTIFICATION ITEMS
+   ========================================================= */
+.notif-item {
+  padding: 1rem 0;
+  border-bottom: 1px solid #f0f0ec;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.notif-item:last-child { border-bottom: none; }
+
+.notif-item h6 {
+  font-size: 0.9rem;
+  font-weight: 600;
+  margin: 0 0 3px;
+  color: var(--text-primary);
+}
+
+.notif-item .notif-meta {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  margin: 0;
+}
+
+.notif-status {
+  font-size: 0.75rem;
+  font-weight: 600;
+  white-space: nowrap;
+  padding-top: 2px;
+  color: var(--text-muted);
+  cursor: pointer;
+}
+
+.notif-status.unread {
+  color: var(--accent);
+  font-weight: 700;
+}
+
+/* =========================================================
+   MESSAGES PAGE
+   ========================================================= */
+.message-thread {
+  padding: 1rem;
+  background: #f9f9f7;
+  border-radius: var(--radius-sm);
+  margin-bottom: 0.75rem;
+  border: 1px solid var(--card-border);
+}
+
+.message-thread h6 {
+  font-size: 0.88rem;
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+
+.message-thread p {
+  font-size: 0.82rem;
+  color: var(--text-secondary);
+  margin: 0;
+  line-height: 1.5;
+}
+
+.message-time {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  background: #e5e7eb;
+  padding: 3px 10px;
+  border-radius: var(--radius-pill);
+  white-space: nowrap;
+}
+
+/* =========================================================
+   LANDING PAGE SPECIFIC
+   ========================================================= */
+/* Dark feature box on landing page right side */
+.feature-box {
+  background: var(--dark-hero);
+  border-radius: var(--radius-card);
+  color: white;
+  padding: 2rem;
+  height: 100%;
+}
+
+.feature-box h2 {
+  font-size: 1.8rem;
+  font-weight: 900;
+  line-height: 1.2;
+  margin-bottom: 1rem;
+  color: white;
+}
+
+.feature-box p {
+  font-size: 0.85rem;
+  color: rgba(255,255,255,0.6);
+  margin-bottom: 1.2rem;
+}
+
+.feature-box-item {
+  background: rgba(255,255,255,0.07);
+  border-radius: var(--radius-sm);
+  padding: 1rem 1.2rem;
+  margin-bottom: 0.75rem;
+}
+
+.feature-box-item h6 {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: white;
+  margin-bottom: 4px;
+}
+
+.feature-box-item p {
+  font-size: 0.8rem;
+  color: rgba(255,255,255,0.55);
+  margin: 0;
+}
+
+/* Live indicator dot */
+.live-dot {
+  width: 10px;
+  height: 10px;
+  background: #fbbf24;
+  border-radius: 50%;
+  display: inline-block;
+  animation: pulse-dot 2s infinite;
+}
+
+@keyframes pulse-dot {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50%       { opacity: 0.5; transform: scale(1.3); }
+}
+
+/* "Live product feel" badge */
+.live-feel-badge {
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.45);
+  margin-bottom: 0.5rem;
+}
+
+/* Core flow step cards */
+.flow-card {
+  background: white;
+  border-radius: var(--radius-card);
+  padding: 1.4rem;
+  box-shadow: var(--card-shadow);
+  height: 100%;
+}
+
+.flow-card h5 {
+  font-size: 1rem;
+  font-weight: 800;
+  margin-bottom: 0.5rem;
+}
+
+.flow-card p {
+  font-size: 0.84rem;
+  color: var(--text-muted);
+  line-height: 1.5;
+  margin: 0;
+}
+
+/* =========================================================
+   ONBOARDING / AUTH PAGE
+   ========================================================= */
+.auth-left {
+  background: var(--dark-hero);
+  border-radius: var(--radius-card);
+  color: white;
+  padding: 2.5rem;
+  min-height: 480px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.auth-left h2 {
+  font-size: 2rem;
+  font-weight: 900;
+  line-height: 1.2;
+  margin-bottom: 1rem;
+  color: white;
+}
+
+.auth-left p {
+  font-size: 0.88rem;
+  color: rgba(255,255,255,0.6);
+  margin-bottom: 1.5rem;
+}
+
+.auth-left ul {
+  padding-left: 1rem;
+  margin: 0;
+}
+
+.auth-left ul li {
+  font-size: 0.85rem;
+  color: rgba(255,255,255,0.65);
+  margin-bottom: 8px;
+}
+
+.auth-right {
+  background: white;
+  border-radius: var(--radius-card);
+  padding: 2.5rem;
+  box-shadow: var(--card-shadow);
+}
+
+.auth-right h2 {
+  font-size: 1.7rem;
+  font-weight: 800;
+  margin-bottom: 1.4rem;
+  color: var(--text-primary);
+}
+
+/* =========================================================
+   AI PANEL (Create Request page)
+   ========================================================= */
+.ai-panel {
+  background: white;
+  border-radius: var(--radius-card);
+  padding: 1.6rem;
+  box-shadow: var(--card-shadow);
+}
+
+.ai-panel-label {
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 0.5rem;
+}
+
+.ai-panel h3 {
+  font-size: 1.3rem;
+  font-weight: 800;
+  margin-bottom: 1.2rem;
+}
+
+.ai-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 0.75rem 0;
+  border-bottom: 1px solid #f0f0ec;
+  gap: 12px;
+}
+
+.ai-row:last-child { border-bottom: none; }
+
+.ai-row-label {
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  min-width: 100px;
+}
+
+.ai-row-value {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  text-align: right;
+}
+
+/* =========================================================
+   PROFILE PAGE
+   ========================================================= */
+.profile-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.7rem 0;
+  border-bottom: 1px solid #f0f0ec;
+  font-size: 0.88rem;
+}
+
+.profile-row:last-child { border-bottom: none; }
+.profile-row span:last-child { font-weight: 700; }
+
+/* =========================================================
+   SECTION HEADERS (within pages)
+   ========================================================= */
+.section-label {
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: 0.5rem;
+}
+
+.section-title {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: var(--text-primary);
+  margin-bottom: 1.2rem;
+}
+
+/* Section header row with button on right */
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-bottom: 1.2rem;
+}
+
+/* =========================================================
+   AI CENTER TREND CARDS
+   ========================================================= */
+.trend-card {
+  background: white;
+  border-radius: var(--radius-card);
+  padding: 1.4rem;
+  box-shadow: var(--card-shadow);
+}
+
+.trend-card .trend-label {
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 0.4rem;
+}
+
+.trend-card .trend-value {
+  font-size: 1.7rem;
+  font-weight: 900;
+  color: var(--text-primary);
+  margin-bottom: 0.3rem;
+  line-height: 1;
+}
+
+.trend-card .trend-desc {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  line-height: 1.4;
+  margin: 0;
+}
+
+/* =========================================================
+   AI RECOMMENDATION ITEMS
+   ========================================================= */
+.ai-rec-item {
+  padding: 1.2rem 0;
+  border-bottom: 1px solid #f0f0ec;
+}
+
+.ai-rec-item:last-child { border-bottom: none; }
+
+.ai-rec-item h6 {
+  font-size: 0.95rem;
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+
+.ai-rec-item p {
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  margin-bottom: 8px;
+}
+
+/* =========================================================
+   UTILITIES & HELPERS
+   ========================================================= */
+.text-accent { color: var(--accent); }
+.text-muted-sm { font-size: 0.8rem; color: var(--text-muted); }
+.fw-800 { font-weight: 800; }
+.fw-700 { font-weight: 700; }
+.gap-sm { gap: 6px; }
+.page-wrap { padding: 0 0 3rem; }
+
+/* Divider */
+.hh-divider { border-top: 1px solid #f0f0ec; margin: 1rem 0; }
+
+/* Small outline button (e.g. "Open details", "View full feed") */
+.btn-sm-outline {
+  display: inline-block;
+  padding: 5px 14px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  border: 1.5px solid rgba(0,0,0,0.15);
+  border-radius: var(--radius-pill);
+  color: var(--text-primary);
+  text-decoration: none;
+  transition: background 0.2s;
+  cursor: pointer;
+  background: white;
+  font-family: 'Figtree', sans-serif;
+}
+
+.btn-sm-outline:hover {
+  background: #f3f4f6;
+  color: var(--text-primary);
+}
+
+/* =========================================================
+   RESPONSIVE TWEAKS
+   ========================================================= */
+@media (max-width: 768px) {
+  .hh-hero { padding: 1.6rem 1.4rem; }
+  .hh-hero h1 { font-size: 1.6rem; }
+  .hh-card, .ai-panel, .auth-right, .auth-left { padding: 1.2rem; }
+  .auth-left { min-height: auto; margin-bottom: 1rem; }
+  .feature-box h2 { font-size: 1.4rem; }
+  .section-title { font-size: 1.2rem; }
+}
+
+@media (max-width: 576px) {
+  .hh-navbar { padding: 12px 0; }
+  .stat-card .stat-number { font-size: 1.6rem; }
+}

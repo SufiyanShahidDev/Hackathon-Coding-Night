@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- FILE: dashboard.html — Dashboard Page -->
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>HelpHub AI – Dashboard</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+  <!-- ===================== NAVBAR ===================== -->
+  <nav class="hh-navbar">
+    <div class="container">
+      <div class="d-flex align-items-center justify-content-between">
+        <a href="index.html" class="navbar-brand">
+          <span class="hh-logo-icon">H</span>
+          HelpHub AI
+        </a>
+        <div class="d-none d-md-flex align-items-center gap-1">
+          <a href="dashboard.html"      class="nav-link">Dashboard</a>
+          <a href="create-request.html" class="nav-link">Create Request</a>
+          <a href="ai-center.html"      class="nav-link">AI Center</a>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ===================== MAIN CONTENT ===================== -->
+  <div class="container page-wrap">
+
+    <!-- Hero -->
+    <div class="hh-hero">
+      <p class="breadcrumb-label">DASHBOARD</p>
+      <h1 id="dash-greeting">Your help hub. See what's happening.</h1>
+      <p>Track your requests, monitor community activity, and discover helpers waiting to support you.</p>
+    </div>
+
+    <!-- Stats row -->
+    <div class="row g-3 mb-4">
+      <div class="col-6 col-md-3">
+        <div class="stat-card">
+          <div class="stat-label">TOTAL REQUESTS</div>
+          <div class="stat-number" id="stat-total">0</div>
+          <div class="stat-desc">Active in the feed</div>
+        </div>
+      </div>
+      <div class="col-6 col-md-3">
+        <div class="stat-card">
+          <div class="stat-label">SOLVED</div>
+          <div class="stat-number" id="stat-solved">0</div>
+          <div class="stat-desc">Problems resolved</div>
+        </div>
+      </div>
+      <div class="col-6 col-md-3">
+        <div class="stat-card">
+          <div class="stat-label">YOUR TRUST SCORE</div>
+          <div class="stat-number text-accent" id="stat-trust">–</div>
+          <div class="stat-desc">Based on contributions</div>
+        </div>
+      </div>
+      <div class="col-6 col-md-3">
+        <div class="stat-card">
+          <div class="stat-label">CONTRIBUTIONS</div>
+          <div class="stat-number" id="stat-contrib">–</div>
+          <div class="stat-desc">Help sessions completed</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row g-4">
+
+      <!-- Left: Recent requests -->
+      <div class="col-lg-8">
+        <div class="hh-card">
+          <div class="d-flex justify-content-between align-items-center mb-3">
+            <div>
+              <p class="hh-card-title mb-1">RECENT REQUESTS</p>
+              <h2 style="font-size:1.2rem;margin:0;">Community activity</h2>
+            </div>
+            <a href="explore.html" class="btn-sm-outline">View all</a>
+          </div>
+
+          <div id="recent-requests">
+            <!-- Filled by JS -->
+          </div>
+        </div>
+      </div>
+
+      <!-- Right: AI Insights + Quick Actions -->
+      <div class="col-lg-4">
+
+        <!-- AI Insights card -->
+        <div class="hh-card mb-3">
+          <p class="hh-card-title">AI INSIGHTS</p>
+          <h3 style="font-size:1rem;margin-bottom:0.8rem;">Platform intelligence</h3>
+
+          <div class="ai-row">
+            <span class="ai-row-label">Top category</span>
+            <span class="ai-row-value" id="ai-top-cat">Web Development</span>
+          </div>
+          <div class="ai-row">
+            <span class="ai-row-label">Urgent requests</span>
+            <span class="ai-row-value" id="ai-urgent">2</span>
+          </div>
+          <div class="ai-row">
+            <span class="ai-row-label">Open requests</span>
+            <span class="ai-row-value" id="ai-open">0</span>
+          </div>
+
+          <div class="mt-3">
+            <a href="ai-center.html" class="btn-sm-outline w-100 text-center">View AI Center</a>
+          </div>
+        </div>
+
+        <!-- Quick Actions card -->
+        <div class="hh-card">
+          <p class="hh-card-title">QUICK ACTIONS</p>
+          <h3 style="font-size:1rem;margin-bottom:0.9rem;">Get things moving</h3>
+
+          <div class="d-flex flex-column gap-2">
+            <a href="create-request.html" class="btn-teal text-center">Post a request</a>
+            <a href="explore.html"        class="btn-outline-dark-custom text-center">Browse feed</a>
+            <a href="messages.html"       class="btn-outline-dark-custom text-center">Messages</a>
+            <a href="notifications.html"  class="btn-outline-dark-custom text-center">
+              Notifications
+              <span id="notif-badge" class="ms-1 text-accent" style="font-size:0.75rem;"></span>
+            </a>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </div><!-- /container -->
+
+  <!-- Scripts -->
+  <script src="js/data.js"></script>
+  <script src="js/app.js"></script>
+  <script>
+    // ── On page load ────────────────────────────────────────
+    window.addEventListener("DOMContentLoaded", function () {
+      const user = getLoggedInUser();
+      const requests = getRequests();
+
+      // Personalise greeting
+      if (user) {
+        document.getElementById("dash-greeting").textContent =
+          `Welcome back, ${user.name.split(" ")[0]}. See what's happening.`;
+        document.getElementById("stat-trust").textContent  = user.trustScore + "%";
+        document.getElementById("stat-contrib").textContent = user.contributions;
+      }
+
+      // Fill stats
+      const solved = requests.filter(r => r.status === "Solved").length;
+      const open   = requests.filter(r => r.status === "Open").length;
+      document.getElementById("stat-total").textContent  = requests.length;
+      document.getElementById("stat-solved").textContent = solved;
+      document.getElementById("ai-open").textContent     = open;
+
+      // Top category by count
+      const catCount = {};
+      requests.forEach(r => { catCount[r.category] = (catCount[r.category] || 0) + 1; });
+      const topCat = Object.entries(catCount).sort((a,b) => b[1]-a[1])[0];
+      if (topCat) document.getElementById("ai-top-cat").textContent = topCat[0];
+
+      // Urgent count
+      const urgentCount = requests.filter(r => r.urgency === "High").length;
+      document.getElementById("ai-urgent").textContent = urgentCount;
+
+      // Notification badge
+      const unread = getUnreadCount();
+      if (unread > 0) {
+        document.getElementById("notif-badge").textContent = `(${unread})`;
+      }
+
+      // Recent requests (last 3)
+      const container = document.getElementById("recent-requests");
+      requests.slice(0, 3).forEach(req => {
+        const div = document.createElement("div");
+        div.innerHTML = buildRequestCard(req);
+        container.appendChild(div);
+      });
+    });
+  </script>
+</body>
+</html>
