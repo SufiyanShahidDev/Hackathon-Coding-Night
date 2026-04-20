@@ -425,7 +425,7 @@ body {
   text-transform: uppercase;
   color: var(--text-muted);
   margin-bottom: 0.4rem;
-  padding: 15px;
+  padding: 8px;
 }
 
 .stat-card .stat-number {
@@ -434,14 +434,14 @@ body {
   color: var(--text-primary);
   line-height: 1;
   margin-bottom: 0.4rem;
-  padding: 15px;
+  padding: 8px;
 }
 
 .stat-card .stat-desc {
   font-size: 0.8rem;
   color: var(--text-muted);
   line-height: 1.4;
-  padding: 15px;
+  padding: 8px;
 }
 
 /* =========================================================
