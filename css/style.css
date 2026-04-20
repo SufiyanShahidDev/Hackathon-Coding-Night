@@ -441,6 +441,7 @@ body {
   font-size: 0.8rem;
   color: var(--text-muted);
   line-height: 1.4;
+  padding: 15px;
 }
 
 /* =========================================================
