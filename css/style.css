@@ -366,6 +366,8 @@ body {
   border-radius: var(--radius-card);
   padding: 1.4rem 1.6rem;
   box-shadow: var(--card-shadow);
+  height: 220px;
+  width: 180px;
 }
 
 .stat-card .stat-label {
@@ -375,6 +377,7 @@ body {
   text-transform: uppercase;
   color: var(--text-muted);
   margin-bottom: 0.4rem;
+  padding: 15px;
 }
 
 .stat-card .stat-number {
